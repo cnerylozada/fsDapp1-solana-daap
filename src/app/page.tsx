@@ -12,6 +12,9 @@ export default async function Home() {
 
   const votingContractKey = new PublicKey('7PEQLXDuMP9Gbat1CFXJEgUSeaYtchLPP7sKkKFqMvUG')
 
+  const info = await connection.getAccountInfo(votingContractKey)
+  console.log(`info`, info)
+
   const votingProgram: Program<Voting> = new Program(VOTING_CONTRACT, { connection })
 
   const [pda] = PublicKey.findProgramAddressSync(
@@ -22,7 +25,7 @@ export default async function Home() {
   const candidate_pda_list = poll_account.candidatePdaList
 
   const candidate_list = await votingProgram.account.candidate.fetchMultiple(candidate_pda_list)
-  console.log('candidate_list', candidate_list)
+  // console.log('candidate_list', candidate_list)
 
   return <DashboardFeature />
 }
