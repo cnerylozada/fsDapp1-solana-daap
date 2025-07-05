@@ -29,8 +29,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ poll
 
   try {
     const pollAccount = await votingProgram.account.poll.fetch(pollPdaKey)
-    const candidateAccountList = await votingProgram.account.candidate.all()
-    const candidateNameList = candidateAccountList.map((_) => _.account.name)
+    const candidateAccountList = await votingProgram.account.candidate.fetchMultiple(pollAccount.candidatePdaList)
+    const candidateNameList = candidateAccountList.map((_) => _?.name)
 
     const actions: LinkedAction[] = candidateNameList.map((_) => {
       const requestUrl = new URL(request.url)
