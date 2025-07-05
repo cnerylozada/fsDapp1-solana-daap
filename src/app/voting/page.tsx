@@ -12,8 +12,12 @@ export default async function Page() {
           const id = account.id.toString()
           return (
             <Link key={id} href={`voting/${id}`} className="block border rounded-md p-3">
-              <div>Poll: {account.poll}</div>
-              <div>Description: {account.description}</div>
+              <div>
+                <span className="font-bold">Poll:</span> {account.poll}
+              </div>
+              <div>
+                <span className="font-bold">Description:</span> {account.description}
+              </div>
             </Link>
           )
         })}
