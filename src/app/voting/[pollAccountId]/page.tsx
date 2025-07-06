@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: Promise<{ pollAccountId
     try {
       return new PublicKey(pollAccountId)
     } catch (error) {
-      console.log(`Invalid public key`, error)
+      console.error(`Invalid public key`, error)
     }
   }
   const pollAccountKey = getPubKey()
