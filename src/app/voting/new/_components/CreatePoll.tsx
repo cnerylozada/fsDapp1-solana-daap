@@ -24,7 +24,7 @@ export const CreatePoll = () => {
             transaction.add(sendSolInstruction)
 
             // const initializePoll = await votingProgram.methods
-            //   .initializePoll('voting 11:45', 'some description', new BN(3600))
+            // .initializePoll('voting 11:45', 'some description', new BN(3600))
             //   .accounts({ signer: publicKey })
             //   .transaction()
             // transaction.add(initializePoll)

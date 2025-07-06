@@ -11,3 +11,10 @@ export function ellipsify(str = '', len = 4, delimiter = '..') {
 
   return strLen >= limit ? str.substring(0, len) + delimiter + str.substring(strLen - len, strLen) : str
 }
+
+export const getDateAndTime = (timestamp: string) => {
+  const date = new Date(+timestamp * 1000)
+  return date.toLocaleString('en-US', {
+    timeZoneName: 'short',
+  })
+}
