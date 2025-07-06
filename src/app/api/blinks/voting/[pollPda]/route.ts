@@ -7,14 +7,14 @@ import {
   createPostResponse,
   LinkedAction,
 } from '@solana/actions'
-import { clusterApiUrl, Connection, PublicKey, Transaction } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import VOTING_CONTRACT_IDL from '@/contracts/voting/idl.json'
 import { Voting } from '@/contracts/voting/type'
 import { NextResponse } from 'next/server'
+import { connection } from '@/contracts/commons'
 
 const headers = createActionHeaders()
 
-const connection = new Connection(clusterApiUrl('devnet'))
 const votingProgram: Program<Voting> = new Program(VOTING_CONTRACT_IDL, { connection })
 
 export async function GET(request: Request, { params }: { params: Promise<{ pollPda: string }> }) {

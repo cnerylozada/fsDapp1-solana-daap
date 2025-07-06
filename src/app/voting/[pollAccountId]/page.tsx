@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { votingProgram } from '@/contracts/voting/commons'
+import { votingProgram } from '@/contracts/voting/program'
 import { notFound } from 'next/navigation'
 
 export default async function Page({ params }: { params: Promise<{ pollAccountId: string }> }) {

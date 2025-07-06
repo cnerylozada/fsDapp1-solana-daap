@@ -1,5 +1,5 @@
 'use client'
-import { connection } from '@/contracts/voting/commons'
+import { connection } from '@/contracts/commons'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from '@solana/web3.js'
 
@@ -31,6 +31,8 @@ export const CreatePoll = () => {
 
             const signature = await sendTransaction(transaction, connection)
             console.log(`Transaction signature: ${signature}`)
+          } else {
+            console.log(`connect your wallet!`)
           }
         }}
       >

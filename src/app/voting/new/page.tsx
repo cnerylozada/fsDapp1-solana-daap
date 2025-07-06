@@ -1,4 +1,4 @@
-import { votingProgram } from '@/contracts/voting/commons'
+import { votingProgram } from '@/contracts/voting/program'
 import { PublicKey } from '@solana/web3.js'
 import { CreatePoll } from './_components/CreatePoll'
 

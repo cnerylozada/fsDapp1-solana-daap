@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { votingProgram } from '@/contracts/voting/commons'
+import { votingProgram } from '@/contracts/voting/program'
 
 export default async function Page() {
   const pollAccountList = await votingProgram.account.poll.all()
