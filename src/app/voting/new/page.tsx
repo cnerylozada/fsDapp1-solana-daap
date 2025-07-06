@@ -1,5 +1,4 @@
 import { votingProgram } from '@/contracts/voting/commons'
-import { BN } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { CreatePoll } from './_components/CreatePoll'
 
@@ -13,11 +12,6 @@ export default async function Page() {
     votingProgram.programId,
   )
   console.log(`pollAccountPda`, pollAccountPda.toString())
-
-  //   const asd = await votingProgram.methods
-  //     .initializePoll(_poll, 'description', new BN(3600))
-  //     .accounts({ signer: walletKey })
-  //     .rpc()
 
   return (
     <div>
