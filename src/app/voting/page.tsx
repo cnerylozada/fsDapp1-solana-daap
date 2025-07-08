@@ -30,16 +30,24 @@ export default async function Page() {
       </div>
 
       <div className="space-y-4">
-        {pollAccountList.map((_) => {
-          const { account } = _
-          const id = account.id.toString()
+        {pollAccountList
+          .sort((currentItem, nextItem) => {
+            const currentTime = currentItem.account.pollStart.toNumber()
+            const nextTime = nextItem.account.pollStart.toNumber()
+            if (currentTime > nextTime) return -1
+            if (currentTime < nextTime) return 1
+            return 0
+          })
+          .map((_) => {
+            const { account } = _
+            const id = account.id.toString()
 
-          return (
-            <Link key={id} href={`voting/${id}`} className="block">
-              <VotingDetails poll={account.poll} pollStart={account.pollStart} description={account.description} />
-            </Link>
-          )
-        })}
+            return (
+              <Link key={id} href={`voting/${id}`} className="block">
+                <VotingDetails poll={account.poll} pollStart={account.pollStart} description={account.description} />
+              </Link>
+            )
+          })}
       </div>
     </div>
   )
