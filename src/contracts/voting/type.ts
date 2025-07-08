@@ -179,6 +179,13 @@ export type Voting = {
       discriminator: [110, 234, 167, 188, 231, 136, 153, 111]
     },
   ]
+  errors: [
+    {
+      code: 6000
+      name: 'nameTooLong'
+      msg: 'Name too long'
+    },
+  ]
   types: [
     {
       name: 'candidate'

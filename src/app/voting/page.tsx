@@ -1,19 +1,20 @@
 import Link from 'next/link'
-import { votingProgram } from '@/contracts/voting/program'
+import { VOTING_PROGRAM } from '@/contracts/voting/program'
 import { ellipsify } from '@/lib/utils'
 import { VotingDetails } from './_components/VotingDetails'
+import { SOLSCAN_EXPLORER } from '@/contracts/commons'
 
 export default async function Page() {
-  const pollAccountList = await votingProgram.account.poll.all()
-  const programId = votingProgram.programId.toString()
+  const pollAccountList = await VOTING_PROGRAM.account.poll.all()
+  const programId = VOTING_PROGRAM.programId.toString()
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4">
       <div>
         <div className="font-bold">
           Voting Contract:{' '}
           <Link
-            href={`https://solscan.io/account/${programId}?cluster=devnet`}
+            href={`${SOLSCAN_EXPLORER}/${programId}?cluster=devnet`}
             target="_blank"
             className="text-blue-700 underline"
           >
@@ -29,7 +30,7 @@ export default async function Page() {
       </div>
 
       <div className="space-y-4">
-        {pollAccountList.reverse().map((_) => {
+        {pollAccountList.map((_) => {
           const { account } = _
           const id = account.id.toString()
 

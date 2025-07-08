@@ -1,21 +1,15 @@
-import { votingProgram } from '@/contracts/voting/program'
-import { PublicKey } from '@solana/web3.js'
+import Link from 'next/link'
 import { CreatePoll } from './_components/CreatePoll'
 
 export default async function Page() {
-  const POLL_ACCOUNT_TAG = Buffer.from('poll_account')
-
-  const walletKey = new PublicKey(`AKeJdxqP6MpFyhcFGUN79NTUwe2ntZNoGjw37UTbbFp`)
-  const _poll = 'votacion 4:19'
-  const [pollAccountPda] = PublicKey.findProgramAddressSync(
-    [POLL_ACCOUNT_TAG, walletKey.toBuffer(), Buffer.from(_poll)],
-    votingProgram.programId,
-  )
-  console.log(`pollAccountPda`, pollAccountPda.toString())
-
   return (
-    <div>
-      <div>New voting</div>
+    <div className="space-y-4">
+      <div className="text-right">
+        <Link href={`./`} className="text-blue-700">
+          Go back
+        </Link>
+      </div>
+      <div className="font-bold">CreatePoll</div>
       <CreatePoll />
     </div>
   )

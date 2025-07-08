@@ -11,11 +11,11 @@ import { PublicKey, Transaction } from '@solana/web3.js'
 import VOTING_CONTRACT_IDL from '@/contracts/voting/idl.json'
 import { Voting } from '@/contracts/voting/type'
 import { NextResponse } from 'next/server'
-import { connection } from '@/contracts/commons'
+import { CONNECTION } from '@/contracts/commons'
 
 const headers = createActionHeaders()
 
-const votingProgram: Program<Voting> = new Program(VOTING_CONTRACT_IDL, { connection })
+const votingProgram: Program<Voting> = new Program(VOTING_CONTRACT_IDL, { connection: CONNECTION })
 
 export async function GET(request: Request, { params }: { params: Promise<{ pollPda: string }> }) {
   const { pollPda } = await params
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
   try {
     const transferSolInstruction = await votingProgram.methods.vote(candidate).accounts({ signer: voter }).instruction()
-    const blockhash = await connection.getLatestBlockhash()
+    const blockhash = await CONNECTION.getLatestBlockhash()
     const transaction = new Transaction({
       feePayer: voter,
       blockhash: blockhash.blockhash,
