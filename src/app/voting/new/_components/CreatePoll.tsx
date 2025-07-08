@@ -7,6 +7,7 @@ import { Transaction } from '@solana/web3.js'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { toast } from 'sonner'
 
 const schema = z.object({
   poll: z.string().min(15).max(25),
@@ -40,23 +41,22 @@ export const CreatePoll = () => {
 
   const onSubmit: SubmitHandler<SchemaType> = async (data) => {
     try {
-      const initializePollTx = new Transaction()
+      const createVotingTx = new Transaction()
+
       const initializePoll = await VOTING_PROGRAM.methods
         .initializePoll(data.poll, data.description, new BN(3600))
         .accounts({ signer: publicKey })
         .transaction()
-      initializePollTx.add(initializePoll)
-      const initializePollTxSignature = await sendTransaction(initializePollTx, CONNECTION)
-      console.log(`initializePollTxSignature`, initializePollTxSignature)
+      createVotingTx.add(initializePoll)
 
-      const initializeCandidateTx = new Transaction()
       const initializeCandidateList = await Promise.all(
         data.candidates.map((_) =>
           VOTING_PROGRAM.methods.initializeCandidate(data.poll, _.name).accounts({ signer: publicKey }).transaction(),
         ),
       )
-      initializeCandidateList.map((_) => initializeCandidateTx.add(_))
-      const initializeCandidateTxSignature = await sendTransaction(initializeCandidateTx, CONNECTION)
+      initializeCandidateList.map((_) => createVotingTx.add(_))
+
+      const initializeCandidateTxSignature = await sendTransaction(createVotingTx, CONNECTION)
       console.log(`initializeCandidateTxSignature`, initializeCandidateTxSignature)
     } catch (error) {
       console.log(`error`, error)
@@ -65,6 +65,15 @@ export const CreatePoll = () => {
 
   return (
     <div>
+      <button
+        onClick={() =>
+          toast('Event has been created', {
+            description: 'Sunday, December 03, 2023 at 9:00 AM',
+          })
+        }
+      >
+        Show Toast
+      </button>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <div>
           <div className="font-bold">Poll</div>
