@@ -1,4 +1,3 @@
-import { Program } from '@coral-xyz/anchor'
 import {
   ActionGetResponse,
   ActionPostRequest,
@@ -8,14 +7,11 @@ import {
   LinkedAction,
 } from '@solana/actions'
 import { PublicKey, Transaction } from '@solana/web3.js'
-import VOTING_CONTRACT_IDL from '@/contracts/voting/idl.json'
-import { Voting } from '@/contracts/voting/type'
 import { NextResponse } from 'next/server'
 import { CONNECTION } from '@/contracts/commons'
+import { VOTING_PROGRAM } from '@/contracts/voting/program'
 
 const headers = createActionHeaders()
-
-const votingProgram: Program<Voting> = new Program(VOTING_CONTRACT_IDL, { connection: CONNECTION })
 
 export async function GET(request: Request, { params }: { params: Promise<{ pollPda: string }> }) {
   const { pollPda } = await params
@@ -28,8 +24,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ poll
   }
 
   try {
-    const pollAccount = await votingProgram.account.poll.fetch(pollPdaKey)
-    const candidateAccountList = await votingProgram.account.candidate.fetchMultiple(pollAccount.candidatePdaList)
+    const pollAccount = await VOTING_PROGRAM.account.poll.fetch(pollPdaKey)
+    const candidateAccountList = await VOTING_PROGRAM.account.candidate.fetchMultiple(pollAccount.candidatePdaList)
     const candidateNameList = candidateAccountList.map((_) => _?.name)
 
     const actions: LinkedAction[] = candidateNameList.map((_) => {
@@ -65,26 +61,27 @@ export async function POST(request: Request) {
   const url = new URL(request.url)
   const candidate = url.searchParams.get('candidate')
 
-  const candidateAccountList = await votingProgram.account.candidate.all()
+  const candidateAccountList = await VOTING_PROGRAM.account.candidate.all()
   const candidateNameList = candidateAccountList.map((_) => _.account.name)
   if (!candidate || !candidateNameList.includes(candidate))
     return NextResponse.json({ error: `Invalid candidate value` }, { status: 400, headers })
 
-  let voter: PublicKey
+  let account: PublicKey
   try {
-    voter = new PublicKey(body.account)
+    account = new PublicKey(body.account)
   } catch {
     return NextResponse.json({ error: 'Invalid account' }, { status: 400, headers })
   }
 
   try {
-    const transferSolInstruction = await votingProgram.methods.vote(candidate).accounts({ signer: voter }).instruction()
+    const vote = await VOTING_PROGRAM.methods.vote(candidate).accounts({ signer: account }).transaction()
     const blockhash = await CONNECTION.getLatestBlockhash()
+
     const transaction = new Transaction({
-      feePayer: voter,
+      feePayer: account,
       blockhash: blockhash.blockhash,
       lastValidBlockHeight: blockhash.lastValidBlockHeight,
-    }).add(transferSolInstruction)
+    }).add(vote)
 
     const payload: ActionPostResponse = await createPostResponse({
       fields: {
