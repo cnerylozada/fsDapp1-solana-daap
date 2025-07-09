@@ -202,7 +202,7 @@ export type Voting = {
             type: 'string'
           },
           {
-            name: 'vote'
+            name: 'votes'
             type: 'u64'
           },
         ]

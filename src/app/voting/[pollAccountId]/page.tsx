@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: Promise<{ pollAccountId
           <div className="font-bold">Candidates:</div>
           {candidateAccountList.map((_) => (
             <div key={_?.name}>
-              {_?.name} {_?.vote?.toString()}
+              {_?.name} {_?.votes?.toString()}
             </div>
           ))}
         </div>
