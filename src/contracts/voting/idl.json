@@ -176,8 +176,13 @@
   "errors": [
     {
       "code": 6000,
-      "name": "NameTooLong",
-      "msg": "Name too long"
+      "name": "PollTooLong",
+      "msg": "Poll name too long"
+    },
+    {
+      "code": 6001,
+      "name": "DescriptionTooLong",
+      "msg": "Poll name too long"
     }
   ],
   "types": [

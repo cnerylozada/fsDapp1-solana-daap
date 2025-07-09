@@ -182,8 +182,13 @@ export type Voting = {
   errors: [
     {
       code: 6000
-      name: 'nameTooLong'
-      msg: 'Name too long'
+      name: 'pollTooLong'
+      msg: 'Poll name too long'
+    },
+    {
+      code: 6001
+      name: 'descriptionTooLong'
+      msg: 'Poll name too long'
     },
   ]
   types: [
