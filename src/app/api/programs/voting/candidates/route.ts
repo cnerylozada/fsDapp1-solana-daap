@@ -2,9 +2,11 @@ import { VOTING_PROGRAM } from '@/contracts/voting/program'
 import { PublicKey } from '@solana/web3.js'
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request, { params }: { params: Promise<{ pollPda: string }> }) {
-  console.log(`asda`)
-  const { pollPda } = await params
+export async function GET(request: Request) {
+  const url = new URL(request.url)
+  const pollPda = url.searchParams.get('pollPda')
+
+  if (!pollPda) return NextResponse.json({ error: 'Invalid pollPda value' }, { status: 400 })
 
   let pollPdaKey: PublicKey
   try {
