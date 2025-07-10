@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   if (!poll) return NextResponse.json({ error: 'Invalid poll value' }, { status: 400 })
 
   const pollAccountList = await VOTING_PROGRAM.account.poll.all()
-  const pollAccount = pollAccountList.find((_) => _.account.poll === poll)
+  const pollAccount = pollAccountList.find((_) => _.account.poll.toLowerCase() === poll.toLowerCase())
 
   if (!pollAccount) return NextResponse.json({ error: 'Invalid poll value' }, { status: 400 })
 
