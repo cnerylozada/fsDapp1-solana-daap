@@ -1,22 +1,20 @@
 import { VOTING_PROGRAM } from '@/contracts/voting/program'
-import { PublicKey } from '@solana/web3.js'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
-  const pollPda = url.searchParams.get('pollPda')
+  const poll = url.searchParams.get('poll')
 
-  if (!pollPda) return NextResponse.json({ error: 'Invalid pollPda value' }, { status: 400 })
+  if (!poll) return NextResponse.json({ error: 'Invalid poll value' }, { status: 400 })
 
-  let pollPdaKey: PublicKey
-  try {
-    pollPdaKey = new PublicKey(pollPda)
-  } catch {
-    return NextResponse.json({ error: 'Invalid account' }, { status: 400 })
-  }
+  const pollAccountList = await VOTING_PROGRAM.account.poll.all()
+  const pollAccount = pollAccountList.find((_) => _.account.poll === poll)
 
-  const pollAccount = await VOTING_PROGRAM.account.poll.fetch(pollPdaKey)
-  const candidateAccountList = await VOTING_PROGRAM.account.candidate.fetchMultiple(pollAccount.candidatePdaList)
+  if (!pollAccount) return NextResponse.json({ error: 'Invalid poll value' }, { status: 400 })
+
+  const candidateAccountList = await VOTING_PROGRAM.account.candidate.fetchMultiple(
+    pollAccount.account.candidatePdaList,
+  )
 
   return NextResponse.json({ candidateList: candidateAccountList }, { status: 200 })
 }
