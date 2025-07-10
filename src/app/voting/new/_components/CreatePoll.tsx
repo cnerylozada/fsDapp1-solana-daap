@@ -8,6 +8,9 @@ import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useState } from 'react'
 
 const schema = z.object({
   poll: z.string().min(15).max(25),
@@ -18,6 +21,9 @@ type SchemaType = z.infer<typeof schema>
 
 export const CreatePoll = () => {
   const { sendTransaction, publicKey } = useWallet()
+  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState('')
 
   const {
     register,
@@ -41,6 +47,8 @@ export const CreatePoll = () => {
 
   const onSubmit: SubmitHandler<SchemaType> = async (data) => {
     try {
+      setError('')
+      setIsPending(true)
       const createVotingTx = new Transaction()
 
       const initializePoll = await VOTING_PROGRAM.methods
@@ -58,22 +66,42 @@ export const CreatePoll = () => {
 
       const initializeCandidateTxSignature = await sendTransaction(createVotingTx, CONNECTION)
       console.log(`initializeCandidateTxSignature`, initializeCandidateTxSignature)
+
+      toast.custom(
+        () => (
+          <div className="border rounded-md p-3 text-sm">
+            <div>
+              <strong>Poll created!</strong>
+            </div>
+            <div>
+              <Link
+                href={`https://solscan.io/tx/${initializeCandidateTxSignature}?cluster=devnet`}
+                target="_blank"
+                className="underline text-blue-700"
+              >
+                Check your transaction!
+              </Link>
+            </div>
+          </div>
+        ),
+        { duration: 4000 },
+      )
+
+      setIsPending(false)
+
+      setTimeout(() => {
+        router.push('/voting')
+        router.refresh()
+      }, 4000)
     } catch (error) {
       console.log(`error`, error)
+      setError('Poll name already taken or Something went wrong!')
+      setIsPending(false)
     }
   }
 
   return (
     <div>
-      <button
-        onClick={() =>
-          toast('Event has been created', {
-            description: 'Sunday, December 03, 2023 at 9:00 AM',
-          })
-        }
-      >
-        Show Toast
-      </button>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <div>
           <div className="font-bold">Poll</div>
@@ -139,27 +167,14 @@ export const CreatePoll = () => {
           <button
             className="p-2 bg-blue-100 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200"
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || isPending}
           >
-            Create new poll
+            {isPending ? 'Pending ...' : ' Create new poll'}
           </button>
         </div>
-
-        {/* {isPending && <div>Loading transaction ...</div>} */}
-        {true && (
-          <div>
-            Check your transaction:{' '}
-            {/* <Link
-                href={`${SOLSCAN_EXPLORER}/${transactionHash}`}
-                target="_blank"
-                className="text-blue-700 text-sm underline"
-              >
-                Transaction Hash: {shortenHex(data.transactionHash)}
-              </Link> */}
-          </div>
-        )}
-        {/* {error && <div className="text-sm text-red-700">{error.message}</div>} */}
       </form>
+
+      {error && <div className="text-red-700 text-xs">{error}</div>}
     </div>
   )
 }

@@ -1,32 +1,45 @@
-import { AppHero } from '@/components/app-hero'
-
-const links: { label: string; href: string }[] = [
-  { label: 'Solana Docs', href: 'https://docs.solana.com/' },
-  { label: 'Solana Faucet', href: 'https://faucet.solana.com/' },
-  { label: 'Solana Cookbook', href: 'https://solana.com/developers/cookbook/' },
-  { label: 'Solana Stack Overflow', href: 'https://solana.stackexchange.com/' },
-  { label: 'Solana Developers GitHub', href: 'https://github.com/solana-developers/' },
-]
+import Link from 'next/link'
 
 export function DashboardFeature() {
   return (
     <div>
-      <AppHero title="gm" subtitle="Say hi to your new Solana app." />
-      <div className="max-w-xl mx-auto py-6 sm:px-6 lg:px-8 text-center">
-        <div className="space-y-2">
-          <p>Here are some helpful links to get you started.</p>
-          {links.map((link, index) => (
-            <div key={index}>
-              <a
-                href={link.href}
-                className="hover:text-gray-500 dark:hover:text-gray-300"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.label}
-              </a>
+      <div className="mb-2">
+        <Link
+          href={'https://www.linkedin.com/in/cristian-nery-027b70180/'}
+          target="_blank"
+          className="underline text-blue-700"
+        >
+          Author: cristh nery web2/web3 developer
+        </Link>
+      </div>
+      <div className="mb-4">
+        <ul className="list-disc list-inside">
+          <li>
+            I would glad to reveice your feedback. You can find the smart contracts and dapp code in these repositories:
+            <div>
+              <div>
+                <Link href={'https://github.com/cnerylozada/fsDapp1-solana-daap'} target="_blank" className="font-bold">
+                  GITHUB: fsDapp1-solana-daap
+                </Link>
+              </div>
+              <div>
+                <Link
+                  href={'https://github.com/cnerylozada/fsDapp1-solana-contracts'}
+                  target="_blank"
+                  className="font-bold"
+                >
+                  GITHUB: fsDapp1-solana-contracts
+                </Link>
+              </div>
             </div>
-          ))}
+          </li>
+        </ul>
+      </div>
+      <div className="space-y-4">
+        <div>
+          <Link href={'/voting'} className="block p-2 border rounded-md">
+            Voting
+          </Link>
         </div>
       </div>
     </div>
