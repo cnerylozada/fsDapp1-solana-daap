@@ -37,6 +37,10 @@ export type Voting = {
               },
               {
                 kind: 'arg'
+                path: 'poll'
+              },
+              {
+                kind: 'arg'
                 path: 'name'
               },
             ]
@@ -151,6 +155,10 @@ export type Voting = {
               },
               {
                 kind: 'arg'
+                path: 'poll'
+              },
+              {
+                kind: 'arg'
                 path: 'candidateName'
               },
             ]
@@ -162,6 +170,10 @@ export type Voting = {
         },
       ]
       args: [
+        {
+          name: 'poll'
+          type: 'string'
+        },
         {
           name: 'candidateName'
           type: 'string'

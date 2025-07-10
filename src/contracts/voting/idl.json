@@ -31,6 +31,10 @@
               },
               {
                 "kind": "arg",
+                "path": "_poll"
+              },
+              {
+                "kind": "arg",
                 "path": "_name"
               }
             ]
@@ -145,6 +149,10 @@
               },
               {
                 "kind": "arg",
+                "path": "_poll"
+              },
+              {
+                "kind": "arg",
                 "path": "_candidate_name"
               }
             ]
@@ -156,6 +164,10 @@
         }
       ],
       "args": [
+        {
+          "name": "_poll",
+          "type": "string"
+        },
         {
           "name": "_candidate_name",
           "type": "string"

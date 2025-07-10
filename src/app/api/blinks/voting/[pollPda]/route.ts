@@ -30,7 +30,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ poll
 
     const actions: LinkedAction[] = candidateNameList.map((_) => {
       const requestUrl = new URL(request.url)
-      const href = new URL(`/api/blinks/voting/${pollPda}?candidate=${_}`, requestUrl.origin).toString()
+      const href = new URL(
+        `/api/blinks/voting/${pollPda}?poll=${pollAccount.poll}&candidate=${_}`,
+        requestUrl.origin,
+      ).toString()
       return {
         label: `Vote for ${_}`,
         href,
@@ -59,11 +62,12 @@ export const OPTIONS = async () => Response.json(null, { headers })
 export async function POST(request: Request) {
   const body: ActionPostRequest = await request.json()
   const url = new URL(request.url)
+  const poll = url.searchParams.get('poll')
   const candidate = url.searchParams.get('candidate')
 
   const candidateAccountList = await VOTING_PROGRAM.account.candidate.all()
   const candidateNameList = candidateAccountList.map((_) => _.account.name)
-  if (!candidate || !candidateNameList.includes(candidate))
+  if (!poll || !candidate || !candidateNameList.includes(candidate))
     return NextResponse.json({ error: `Invalid candidate value` }, { status: 400, headers })
 
   let account: PublicKey
@@ -74,7 +78,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const vote = await VOTING_PROGRAM.methods.vote(candidate).accounts({ signer: account }).transaction()
+    const vote = await VOTING_PROGRAM.methods.vote(poll, candidate).accounts({ signer: account }).transaction()
     const blockhash = await CONNECTION.getLatestBlockhash()
 
     const transaction = new Transaction({
